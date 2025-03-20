@@ -1,4 +1,4 @@
-name: Publish release
+name: Build and publish a release
 
 on:
   push:
@@ -7,17 +7,72 @@ on:
       - release
 
 jobs:
-  publish_release:
+  build:
+    name: Build distribution
     runs-on: ubuntu-latest
 
-    environment:
-      name: Publisher
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      # - name: Build & publish
-      #   uses: astral-sh/setup-uv@v5
-      #   run: |
-      #     uv build
+      - name: Build distribution artifacts
+        uses: astral-sh/setup-uv@v5
+        run: make package
+
+      - name: Store distribution artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: distributions
+          path: dist/
+
+  publish:
+    name: Publish distribution
+    runs-on: ubuntu-latest
+    needs: 
+    - build
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+    
+    steps:
+    - name: Download distribution artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: distributions
+        path: dist/
+    - name: Upload distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+
+  release:
+    name: Sign distribution
+    runs-on: ubuntu-latest
+    needs: 
+    - publish
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+    - name: Download distribution artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: distributions
+        path: dist/
+
+    - name: Sign the artifacts with Sigstore
+      uses: sigstore/gh-action-sigstore-python@v3.0.0
+      with:
+        inputs: ./dist/*.tar.gz ./dist/*.whl
+
+    - name: Create GitHub release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes ""
+ 
+    - name: Upload artifact signatures to GitHub release
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: gh release upload "$GITHUB_REF_NAME" dist/** --repo "$GITHUB_REPOSITORY"
