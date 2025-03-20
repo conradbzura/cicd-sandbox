@@ -1,26 +1,30 @@
-name: Sync
+name: Sync push to master
 
 on:
   push:
     branches:
       - master
-      - release
 
 jobs:
-  sync:
+  checkout:
+    name: Checkout code
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+  sync-dev:
+    name: Merge master into dev
+    needs: checkout
+    runs-on: ubuntu-latest
     permissions:
       contents: write
-
-    runs-on: ubuntu-latest
-
-    name: Merge master into dev and release branches
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Merge master into dev
-        if: github.base_ref == 'master'
         run: |
           git config --global user.email "github-actions@example.com"
           git config --global user.name "GitHub Actions"
@@ -30,8 +34,19 @@ jobs:
           git merge --no-ff master -m "Auto-merged master into dev"
           git push
 
+  sync-release:
+    name: Merge master into release
+    needs: checkout
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Merge master into release
-        if: github.base_ref == 'master' && github.head_ref != 'release'
+        if: github.ref != 'release'
         run: |
           if git show-ref --quiet refs/heads/release; then
           git checkout release
@@ -41,15 +56,3 @@ jobs:
           else
           echo "Release branch not found, skipping."
           fi
-    
-      - name: Merge release into dev
-        if: github.base_ref == 'release'
-        run: |
-          git config --global user.email "github-actions@example.com"
-          git config --global user.name "GitHub Actions"
-          git fetch --unshallow
-          git checkout dev
-          git pull
-          git merge --no-ff release -m "Auto-merged release into dev"
-          git push
-
