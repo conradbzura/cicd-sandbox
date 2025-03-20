@@ -12,28 +12,28 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    name: Merge master back to dev and release branches
+    name: Merge master into dev and release branches
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Merge master back to dev branch
+      - name: Merge master into dev branch
         run: |
           git config --global user.email "github-actions@example.com"
           git config --global user.name "GitHub Actions"
           git fetch --unshallow
           git checkout dev
           git pull
-          git merge --no-ff master -m "Auto-merged master back to dev"
+          git merge --no-ff master -m "Auto-merged master into dev"
           git push
 
-      - name: Merge master back to release branch
+      - name: Merge master into release branch
         run: |
           if git show-ref --quiet refs/heads/release; then
           git checkout release
           git pull
-          git merge --no-ff master -m "Auto-merged master back to release"
+          git merge --no-ff master -m "Auto-merged master into release"
           git push
           else
           echo "Release branch not found, skipping."
