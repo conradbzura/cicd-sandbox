@@ -22,6 +22,7 @@ jobs:
 
       - name: Create tag
         run: |
+          git fetch --tags
           echo "v$(git tag -l "v*" | head -n 1)"
           # echo "$VERSION"
           # git tag $VERSION
