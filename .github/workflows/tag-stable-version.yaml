@@ -23,7 +23,7 @@ jobs:
       - name: Create tag
         run: |
           git fetch --tags
-          VERSION=$(git tag -l "v*" | head -n 1)
+          VERSION=$(git describe --tags --match="v*" --abbrev=0)
           NEW_VERSION=$(scripts/bump-version.sh minor $VERSION)
           echo "Bumping $VERSION to $NEW_VERSION"
           git tag $NEW_VERSION
