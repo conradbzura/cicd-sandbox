@@ -86,7 +86,7 @@ case $SEGMENT in
 esac
 
 if [ "$CYCLE" == "." ] && [ "$PATCH" -eq 0 ]; then
-    echo "$MAJOR.$MINOR"
+    echo "v$MAJOR.$MINOR"
 else
-    echo "$MAJOR.$MINOR$CYCLE$PATCH"
+    echo "v$MAJOR.$MINOR$CYCLE$PATCH"
 fi

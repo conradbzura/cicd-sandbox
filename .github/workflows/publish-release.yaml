@@ -19,8 +19,12 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Build distribution artifacts
+      - name: Install uv & prepare python
         uses: astral-sh/setup-uv@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build distribution artifacts
         run: make package
 
       - name: Store distribution artifacts
