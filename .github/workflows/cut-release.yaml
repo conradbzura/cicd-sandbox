@@ -1,0 +1,40 @@
+# This is a basic workflow that is manually triggered
+
+name: Cut release
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      release-type:
+        type: choice
+        description: Whether this is a major or minor release
+        options: 
+          - major
+          - minor
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "greet"
+  cut-release:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    name: Cut ${{ github.event.inputs.release-type }} release
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cut release branch
+        run: |
+          git config --global user.email "github-actions@example.com"
+          git config --global user.name "GitHub Actions"
+          git fetch --unshallow
+          git checkout dev
+          git pull
+          git checkout -b release
+          git push --set-upstream origin release
