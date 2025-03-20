@@ -20,7 +20,6 @@ jobs:
           persist-credentials: false
 
       - name: Build distribution artifacts
-        uses: astral-sh/setup-uv@v5
         run: make package
 
       - name: Store distribution artifacts
@@ -45,6 +44,7 @@ jobs:
       with:
         name: distributions
         path: dist/
+
     - name: Upload distribution to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
 
