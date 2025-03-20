@@ -24,7 +24,7 @@ jobs:
         run: |
           git fetch --tags
           VERSION=$(git tag -l "v*" | head -n 1)
-          NEW_VERSION=$(scripts/bump-version.sh minor $VERSION)
+          NEW_VERSION=$(scripts/bump-version.sh patch $VERSION)
           echo "Bumping $VERSION to $NEW_VERSION"
-          # git tag $NEW_VERSION
-          # git push origin $NEW_VERSION
+          git tag $NEW_VERSION
+          git push origin $NEW_VERSION
