@@ -1,0 +1,27 @@
+name: Tag stable version
+
+on:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - '**'
+
+jobs:
+  tag-stable-version:
+    name: Tag stable version
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create tag
+        run: |
+          VERSION=$(scripts/bump-version.sh minor $(git tag -l "v*" | head -n 1))
+          git tag $VERSION
+          git push origin $VERSION

@@ -1,0 +1,27 @@
+name: Tag pre-release version
+
+on:
+  push:
+    branches:
+      - release
+    tags-ignore:
+      - '**'
+
+jobs:
+  tag-prerelease-version:
+    name: Tag pre-release version
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create tag
+        run: |
+          VERSION=$(scripts/bump-version.sh patch $(git tag -l "v*" | head -n 1))
+          git tag $VERSION
+          git push origin $VERSION

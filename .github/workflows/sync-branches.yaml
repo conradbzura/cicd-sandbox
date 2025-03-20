@@ -1,4 +1,4 @@
-name: Sync master
+name: Sync
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Merge master into dev branch
+      - name: Merge master into dev
         if: github.base_ref == 'master'
         run: |
           git config --global user.email "github-actions@example.com"
@@ -30,7 +30,7 @@ jobs:
           git merge --no-ff master -m "Auto-merged master into dev"
           git push
 
-      - name: Merge master into release branch
+      - name: Merge master into release
         if: github.base_ref == 'master' && github.head_ref != 'release'
         run: |
           if git show-ref --quiet refs/heads/release; then
@@ -42,7 +42,7 @@ jobs:
           echo "Release branch not found, skipping."
           fi
     
-      - name: Merge release into dev branch
+      - name: Merge release into dev
         if: github.base_ref == 'release'
         run: |
           git config --global user.email "github-actions@example.com"
