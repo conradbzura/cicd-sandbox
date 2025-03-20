@@ -3,9 +3,9 @@ name: Validate pull request
 on:
   pull_request:
     types:
+      - edited
       - opened
       - reopened
-      - edited
       - synchronize
     
 jobs:
