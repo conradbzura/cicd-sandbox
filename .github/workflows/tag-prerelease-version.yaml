@@ -22,6 +22,7 @@ jobs:
 
       - name: Create tag
         run: |
-          VERSION=$(scripts/bump-version.sh patch $(git tag -l "v*" | head -n 1))
+          VERSION="v$(scripts/bump-version.sh patch $(git tag -l "v*" | head -n 1))"
+          echo "$VERSION"
           git tag $VERSION
           git push origin $VERSION
