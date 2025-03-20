@@ -28,9 +28,6 @@ esac
 
 # Get the latest version tag, default to 0.0.0
 VERSION=$(git tag -l "v*" | head -n 1)
-if [ -z "$VERSION" ]; then
-    VERSION="0.0.0"
-fi
 
 # Verify no active release candidates exist
 if [[ $VERSION == *rc* ]]; then

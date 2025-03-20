@@ -1,6 +1,6 @@
 #!/bin/bash
 
-USAGE="Usage: $0 VERSION"
+USAGE="Usage: $0 [VERSION=0.0.0]"
 
 # Evaluate arguments
 case $# in
@@ -8,8 +8,7 @@ case $# in
         VERSION=$1
         ;;
     *)
-        echo $USAGE
-        exit 1
+        VERSION="0.0.0"
         ;;
 esac
 
