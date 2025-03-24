@@ -1,0 +1,23 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=64", "setuptools-scm>=8"]
+
+[project]
+authors = [{ name = "Conrad Bzura", email = "conradbzura@gmail.com" }]
+dependencies = ["pytest"]
+description = ""
+dynamic = ["version"]
+license = { text = "MIT License" }
+name = "conradbzura-2025-03-24-cicd-sandbox"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.8"
+
+[tool.setuptools_scm]
+local_scheme = "dirty-tag"
+version_scheme = "release-branch-semver"
+
+[[tool.uv.index]]
+name = "test"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
