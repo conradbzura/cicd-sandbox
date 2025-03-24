@@ -34,7 +34,7 @@ if git show-ref --verify --quiet refs/heads/$BRANCH; then
 fi
 
 # Get the latest version tag, default to 0.0.0
-VERSION=$(git tag -l "v*" | head -n 1)
+VERSION=$(git describe --tags --abbrev=0)
 
 # Verify no active release candidates exist
 if [[ $VERSION == *rc* ]]; then
