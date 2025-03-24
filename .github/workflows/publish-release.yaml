@@ -1,18 +1,9 @@
 name: Build and publish a release
 
 on:
-  workflow_call:
-    inputs:
-      version:
-        required: true
-        type: string
-      prerelease:
-        required: false
-        type: boolean
-        default: false
-    secrets:
-      token:
-        required: true
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -25,7 +16,7 @@ jobs:
         with:
           fetch-tags: true
           persist-credentials: false
-          ref: ${{ inputs.version }}
+          ref: ${{ github.ref }}
 
       - name: Install uv & prepare python
         uses: astral-sh/setup-uv@v5
@@ -83,7 +74,7 @@ jobs:
 
     - name: Create GitHub release
       run: |
-        if [ "${{ inputs.prerelease }}" = "true" ]; then
+        if [[ "${{ github.ref_name }}" == *"rc"* ]]]; then
           prerelease_flag="--prerelease"
         else
           prerelease_flag=""
