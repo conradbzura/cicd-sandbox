@@ -76,7 +76,7 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        if [[ "${{ github.ref_name }}" == "v*rc*" ]]; then
+        if [[ "${{ github.ref_name }}" == *rc* ]]; then
           prerelease_flag="--prerelease"
         else
           prerelease_flag=""

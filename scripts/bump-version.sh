@@ -10,7 +10,7 @@ case $# in
                 SEGMENT=$1
                 ;;
             *)
-                echo "ERROR: Invalid version segment: $1"
+                echo "ERROR: Invalid version segment: $1" >&2
                 echo $USAGE
                 exit 1
                 ;;
@@ -44,7 +44,7 @@ case $VERSION in
 esac
 
 if [ "$PRE_RELEASE" = true ] && [[ "$SEGMENT" == "major" ]]; then
-    echo "ERROR: Cannot bump major version segment of a pre-release version"
+    echo "ERROR: Cannot bump major version segment of a pre-release version" >&2
     exit 1
 fi
 
