@@ -31,7 +31,7 @@ jobs:
         id: cut-release-branch
         run: |
           rc_version=$(scripts/cut-release.sh ${{ github.event.inputs.release-type }} release)
-          echo "rc_version=$rc_version" >> $GITHUB_ENV
+          echo "rc_version=$rc_version" >> $GITHUB_OUTPUT
           echo "version=$(scripts/bump-version.sh minor $rc_version)" >> $GITHUB_OUTPUT
         
       - name: Checkout release
