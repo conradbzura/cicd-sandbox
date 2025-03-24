@@ -61,8 +61,6 @@ RELEASE_TAG="v$RELEASE_VERSION"
 
 # Create a new branch for the release candidate
 git checkout -b $BRANCH >/dev/null 2>&1
-git push --set-upstream origin $BRANCH >/dev/null 2>&1
-git tag $RELEASE_TAG >/dev/null 2>&1
-git push --set-upstream origin tag $RELEASE_TAG >/dev/null 2>&1
+git push origin $BRANCH >/dev/null 2>&1
 
 echo $RELEASE_TAG

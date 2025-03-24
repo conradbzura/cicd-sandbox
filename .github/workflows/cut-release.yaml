@@ -27,11 +27,23 @@ jobs:
         with:
           ref: dev
 
-      - name: Cut and tag release branch
+      - name: Create release branch
         id: cut-release-branch
         run: |
           rc_version=$(scripts/cut-release.sh ${{ github.event.inputs.release-type }} release)
+          echo "rc_version=$rc_version" >> $GITHUB_ENV
           echo "version=$(scripts/bump-version.sh minor $rc_version)" >> $GITHUB_OUTPUT
+        
+      - name: Checkout release
+        uses: actions/checkout@v4
+        with:
+          ref: release
+          token: ${{ secrets.MY_TOKEN }}
+
+      - name: Tag release
+        run: |
+          git tag ${{ steps.cut-release-branch.outputs.rc_version }}
+          git push origin ${{ steps.cut-release-branch.outputs.rc_version }}
 
       - name: Create pull request
         env:
