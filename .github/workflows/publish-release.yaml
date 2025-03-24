@@ -1,9 +1,18 @@
 name: Build and publish a release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+      prerelease:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      token:
+        required: true
 
 jobs:
   build:
@@ -14,15 +23,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          fetch-tags: true
           persist-credentials: false
+          ref: ${{ inputs.version }}
 
       - name: Install uv & prepare python
         uses: astral-sh/setup-uv@v5
 
       - name: Build distribution artifacts
-        run: |
-          git fetch --tags
-          uv build
+        run: uv build
 
       - name: Store distribution artifacts
         uses: actions/upload-artifact@v4
@@ -73,12 +82,17 @@ jobs:
         inputs: ./dist/*.tar.gz ./dist/*.whl
 
     - name: Create GitHub release
-      env:
-        GH_TOKEN: ${{ secrets.MY_TOKEN }}
       run: |
-        gh release create ${{ github.ref_name }} --target ${{ github.sha }} --repo ${{ github.repository }} --generate-notes
+        if [ "${{ inputs.prerelease }}" = "true" ]; then
+          prerelease_flag="--prerelease"
+        else
+          prerelease_flag=""
+        fi
+        gh release create ${{ github.ref_name }} --verify-tag \
+        --repo ${{ github.repository }} \
+        --target ${{ github.sha }} \
+        --generate-notes \
+        $prerelease_flag
  
     - name: Upload artifact signatures to GitHub release
-      env:
-        GH_TOKEN: ${{ secrets.MY_TOKEN }}
       run: gh release upload ${{ github.ref_name }} dist/** --repo ${{ github.repository }}
