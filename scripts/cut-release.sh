@@ -26,9 +26,9 @@ case $# in
         ;;
 esac
 
-git fetch --unshallow >/dev/null 2>&1
+# git fetch --unshallow >/dev/null 2>&1
 git checkout dev >/dev/null 2>&1
-git pull >/dev/null 2>&1
+# git pull >/dev/null 2>&1
 
 # Check if the release branch already exists
 if git show-ref --verify --quiet refs/heads/$BRANCH; then
@@ -50,7 +50,7 @@ read MAJOR MINOR PATCH <<< $(scripts/split-version.sh $VERSION)
 # Bump the version
 case $RELEASE_TYPE in
     major)
-        RELEASE_VERSION="$((MAJOR + 1)).${MINOR}rc0"
+        RELEASE_VERSION="$((MAJOR + 1)).0rc0"
         ;;
     minor)
         RELEASE_VERSION="${MAJOR}.$((MINOR + 1))rc0"
@@ -59,8 +59,8 @@ esac
 
 RELEASE_TAG="v$RELEASE_VERSION"
 
-# Create a new branch for the release candidate
-git checkout -b $BRANCH >/dev/null 2>&1
-git push origin $BRANCH >/dev/null 2>&1
+# # Create a new branch for the release candidate
+# git checkout -b $BRANCH >/dev/null 2>&1
+# git push origin $BRANCH >/dev/null 2>&1
 
 echo $RELEASE_TAG
