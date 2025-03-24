@@ -24,6 +24,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.MY_TOKEN }}
+          ref: dev
 
       - name: Cut and tag release branch
         id: cut-release-branch
