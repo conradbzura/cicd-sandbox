@@ -26,6 +26,9 @@ case $# in
         ;;
 esac
 
+git fetch --unshallow >/dev/null 2>&1
+git checkout dev >/dev/null 2>&1
+git pull >/dev/null 2>&1
 
 # Check if the release branch already exists
 if git show-ref --verify --quiet refs/heads/$BRANCH; then
@@ -57,9 +60,6 @@ esac
 RELEASE_TAG="v$RELEASE_VERSION"
 
 # Create a new branch for the release candidate
-git fetch --unshallow >/dev/null 2>&1
-git checkout dev >/dev/null 2>&1
-git pull >/dev/null 2>&1
 git checkout -b $BRANCH >/dev/null 2>&1
 git push --set-upstream origin $BRANCH >/dev/null 2>&1
 git tag $RELEASE_TAG >/dev/null 2>&1
