@@ -32,7 +32,9 @@ jobs:
 
       - name: Cut release branch
         id: cut-release-branch
-        run: echo "version=$(scripts/cut-release.sh ${{ github.event.inputs.release-type }} release)" >> $GITHUB_OUTPUT
+        run: |
+          rc_version=$(scripts/cut-release.sh ${{ github.event.inputs.release-type }} release)
+          echo "version=$(scripts/bump-version.sh minor $rc_version)" >> $GITHUB_OUTPUT
 
       - name: Create pull request
         env:

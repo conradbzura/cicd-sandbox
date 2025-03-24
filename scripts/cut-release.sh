@@ -61,7 +61,8 @@ git fetch --unshallow >/dev/null 2>&1
 git checkout dev >/dev/null 2>&1
 git pull >/dev/null 2>&1
 git checkout -b $BRANCH >/dev/null 2>&1
-git tag $RELEASE_TAG >/dev/null 2>&1
 git push --set-upstream origin $BRANCH >/dev/null 2>&1
+git tag $RELEASE_TAG >/dev/null 2>&1
+git push --set-upstream origin tag $RELEASE_TAG >/dev/null 2>&1
 
 echo $RELEASE_TAG
