@@ -23,7 +23,7 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
       - name: Build distribution artifacts
-        run: scripts/build-distribution.sh
+        run: uv build
 
       - name: Store distribution artifacts
         uses: actions/upload-artifact@v4
