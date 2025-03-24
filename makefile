@@ -1,11 +1,11 @@
 install:
 	uv pip install -e .
 
-package:
-	scripts/build-package.sh
+distribution:
+	scripts/build-distribution.sh
 
 public:
-	scripts/publish-package.sh
+	scripts/publish-distribution.sh
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
