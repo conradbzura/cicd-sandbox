@@ -26,8 +26,15 @@ case $# in
         ;;
 esac
 
+
+# Check if the release branch already exists
+if git show-ref --verify --quiet refs/heads/$BRANCH; then
+    echo "ERROR: Branch '$BRANCH' already exists."
+    exit 1
+fi
+
 # Get the latest version tag, default to 0.0.0
-VERSION=$(git tag -l "v*" | head -n 1)
+VERSION=$(git describe --tags --abbrev=0)
 
 # Verify no active release candidates exist
 if [[ $VERSION == *rc* ]]; then
@@ -50,11 +57,12 @@ esac
 RELEASE_TAG="v$RELEASE_VERSION"
 
 # Create a new branch for the release candidate
-git fetch --unshallow
-git checkout dev
-git pull
-git checkout -b $BRANCH
-git tag $RELEASE_TAG
-git push --set-upstream origin $BRANCH
+git fetch --unshallow >/dev/null 2>&1
+git checkout dev >/dev/null 2>&1
+git pull >/dev/null 2>&1
+git checkout -b $BRANCH >/dev/null 2>&1
+git push --set-upstream origin $BRANCH >/dev/null 2>&1
+git tag $RELEASE_TAG >/dev/null 2>&1
+git push --set-upstream origin tag $RELEASE_TAG >/dev/null 2>&1
 
 echo $RELEASE_TAG

@@ -2,13 +2,10 @@ install:
 	uv pip install -e .
 
 distribution:
-	scripts/build-package.sh
+	scripts/build-distribution.sh
 
 public:
-	scripts/publish-package.sh
-
-distribution-dryrun:
-	@scripts/publish.sh
+	scripts/publish-distribution.sh
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

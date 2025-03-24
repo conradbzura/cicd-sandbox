@@ -2,9 +2,6 @@ name: Build and publish a release
 
 on:
   push:
-    branches:
-      - master
-      - release
     tags:
       - 'v*'
 
@@ -17,14 +14,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          fetch-tags: true
           persist-credentials: false
+          ref: ${{ github.ref }}
+
+      - name: Install uv & prepare python
+        uses: astral-sh/setup-uv@v5
 
       - name: Build distribution artifacts
-        uses: astral-sh/setup-uv@v5
-        run: make package
+        run: uv build
 
       - name: Store distribution artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: distributions
           path: dist/
@@ -47,6 +48,8 @@ jobs:
         path: dist/
     - name: Upload distribution to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
 
   publish-to-github:
     name: Publish distribution to GitHub
@@ -71,10 +74,20 @@ jobs:
 
     - name: Create GitHub release
       env:
-        GITHUB_TOKEN: ${{ github.token }}
-      run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes ""
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        if [[ "${{ github.ref_name }}" == "v*rc*" ]]; then
+          prerelease_flag="--prerelease"
+        else
+          prerelease_flag=""
+        fi
+        gh release create ${{ github.ref_name }} --verify-tag \
+        --repo ${{ github.repository }} \
+        --target ${{ github.sha }} \
+        --generate-notes \
+        $prerelease_flag
  
     - name: Upload artifact signatures to GitHub release
       env:
-        GITHUB_TOKEN: ${{ github.token }}
-      run: gh release upload "$GITHUB_REF_NAME" dist/** --repo "$GITHUB_REPOSITORY"
+        GH_TOKEN: ${{ github.token }}
+      run: gh release upload ${{ github.ref_name }} dist/** --repo ${{ github.repository }}

@@ -2,7 +2,6 @@ name: Cut a release
 
 on:
   workflow_dispatch:
-    # Inputs the workflow accepts.
     inputs:
       release-type:
         name: Release type
@@ -12,27 +11,25 @@ on:
           - minor
         default: minor
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
   cut-release:
     permissions:
       contents: write
       pull-requests: write
 
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     name: Cut ${{ github.event.inputs.release-type }} release
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Cut release branch
+      - name: Cut and tag release branch
         id: cut-release-branch
-        run: echo "version=$(scripts/cut-release.sh ${{ github.event.inputs.release-type }} release)" >> $GITHUB_OUTPUT
+        run: |
+          rc_version=$(scripts/cut-release.sh ${{ github.event.inputs.release-type }} release)
+          echo "version=$(scripts/bump-version.sh minor $rc_version)" >> $GITHUB_OUTPUT
 
       - name: Create pull request
         env:
