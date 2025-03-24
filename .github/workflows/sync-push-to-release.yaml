@@ -33,6 +33,7 @@ jobs:
 
   sync:
     name: Merge release into dev
+    needs: tag-prerelease-version
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -33,6 +33,7 @@ jobs:
 
   checkout:
     name: Checkout code
+    needs: tag-stable-version
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
