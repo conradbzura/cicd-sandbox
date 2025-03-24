@@ -4,11 +4,10 @@ on:
       - 'v*rc*'
 
 jobs:
-  build:
-    steps:
-      - uses: ./.github/workflows/publish-release.yaml
-        with:
-          version: ${{ github.ref }}
-          prerelease: true
-        secrets:
-          token: ${{ secrets.MY_TOKEN }}
+  go:
+    uses: ./.github/workflows/publish-release.yaml
+    with:
+      version: ${{ github.ref }}
+      prerelease: true
+    secrets:
+      token: ${{ secrets.MY_TOKEN }}
