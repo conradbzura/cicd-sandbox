@@ -51,6 +51,8 @@ jobs:
         path: dist/
     - name: Upload distribution to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
 
   publish-to-github:
     name: Publish distribution to GitHub
