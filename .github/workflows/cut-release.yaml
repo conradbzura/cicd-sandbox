@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
     inputs:
       release-type:
-        name: Release type
         type: choice
         options: 
           - major
