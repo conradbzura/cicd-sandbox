@@ -66,6 +66,11 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.MY_TOKEN }}
+
       - name: Create pull request
         env:
           GH_TOKEN: ${{ secrets.MY_TOKEN }}
@@ -84,6 +89,11 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.MY_TOKEN }}
+
       - name: Create pull request
         env:
           GH_TOKEN: ${{ secrets.MY_TOKEN }}
