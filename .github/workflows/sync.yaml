@@ -19,7 +19,7 @@ jobs:
       pull-requests: write
 
     outputs:
-      new-version: ${{ steps.create-tag.outputs.new-version }}
+      new_version: ${{ steps.create-tag.outputs.new_version }}
 
     steps:
       - name: Checkout code
@@ -58,7 +58,7 @@ jobs:
           echo "Bumping $version to $new_version"
           git tag $new_version
           git push origin $new_version
-          echo "new-version=$new_version" >> $GITHUB_OUTPUT
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
 
   publish-release:
     name: Publish release
@@ -66,7 +66,7 @@ jobs:
     uses: ./.github/workflows/publish-release.yaml
     with:
       target-branch: ${{ github.base_ref }}
-      version: ${{ needs.tag-version.new-version }}
+      version: ${{ needs.tag-version.outputs.new_version }}
     secrets:
       pypi-token: ${{ secrets.TEST_PYPI_TOKEN }}
     permissions:
