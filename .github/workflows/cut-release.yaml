@@ -31,6 +31,8 @@ jobs:
 
       - name: Verify dev is up to date
         run: |
+          git fetch --unshallow origin dev
+          git fetch --unshallow origin master
           if [[ $(git rev-list --count --left-only origin/master..origin/dev) > 0 ]]; then
             echo "Error: dev is not up to date with master" >&2
             exit 1
