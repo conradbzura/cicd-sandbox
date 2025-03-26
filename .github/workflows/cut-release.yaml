@@ -21,7 +21,7 @@ jobs:
     name: Cut ${{ github.event.inputs.release-type }} release
 
     outputs:
-      rc-version: ${{ steps.cut-release-branch.outputs.rc-version }}
+      rc_version: ${{ steps.cut-release-branch.outputs.rc_version }}
 
     steps:
       - name: Checkout code
@@ -32,9 +32,9 @@ jobs:
       - name: Create release branch
         id: cut-release-branch
         run: |
-          rc-version=$(scripts/cut-release.sh ${{ github.event.inputs.release-type }} release)
-          echo "rc-version=$rc-version" >> $GITHUB_OUTPUT
-          echo "version=$(scripts/bump-version.sh minor $rc-version)" >> $GITHUB_OUTPUT
+          rc_version=$(scripts/cut-release.sh ${{ github.event.inputs.release-type }} release)
+          echo "rc_version=$rc_version" >> $GITHUB_OUTPUT
+          echo "version=$(scripts/bump-version.sh minor $rc_version)" >> $GITHUB_OUTPUT
         
       - name: Checkout release
         uses: actions/checkout@v4
@@ -44,8 +44,8 @@ jobs:
 
       - name: Tag release
         run: |
-          git tag ${{ steps.cut-release-branch.outputs.rc-version }}
-          git push origin ${{ steps.cut-release-branch.outputs.rc-version }}
+          git tag ${{ steps.cut-release-branch.outputs.rc_version }}
+          git push origin ${{ steps.cut-release-branch.outputs.rc_version }}
 
       - name: Create pull request
         env:
@@ -58,7 +58,7 @@ jobs:
     uses: ./.github/workflows/publish-release.yaml
     with:
       target-branch: release
-      version: ${{ needs.cut-release.outputs.rc-version }}
+      version: ${{ needs.cut-release.outputs.rc_version }}
     secrets:
       pypi-token: ${{ secrets.TEST_PYPI_TOKEN }}
     permissions:
