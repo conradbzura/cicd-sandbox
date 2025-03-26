@@ -29,6 +29,13 @@ jobs:
         with:
           ref: dev
 
+      - name: Verify dev is up to date
+        run: |
+          if [[ $(git rev-list --count --left-only origin/master..origin/dev) > 0 ]]; then
+            echo "Error: dev is not up to date with master" >&2
+            exit 1
+          fi
+
       - name: Create release branch
         id: cut-release-branch
         run: |
